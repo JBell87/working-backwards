@@ -1,0 +1,9 @@
+{
+  "name": "working-backwards",
+  "description": "Start from the customer: draft, coach, or critique a PR/FAQ, then carry software ideas into a test-driven build.",
+  "version": "0.1.0",
+  "author": { "name": "JBell87" },
+  "repository": "https://github.com/JBell87/working-backwards",
+  "license": "MIT",
+  "keywords": ["working-backwards", "prfaq", "product", "tdd"]
+}
