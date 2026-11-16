@@ -19,7 +19,8 @@ idea
          └─ fresh-context review: comprehension, design critique, readiness
          └─ deliverables: architecture diagram, data schema, interface
             reference, build phases, plain-language explanation
-         └─ YOU APPROVE THE BUILD PLAN
+         └─ preflight: can this environment actually run the plan?
+         └─ YOU APPROVE THE BUILD PLAN (and any installs it needs)
          └─ build: dependency waves in parallel, a fresh agent per task
              └─ after each task: reviewers with different lenses, in parallel
              └─ after each phase: whole-branch, goal-backward verification
@@ -47,6 +48,8 @@ It does not invent metrics, research, or customers. Gaps are marked as placehold
 **Derives the spec backward.** It starts from what must be observably true for the PR/FAQ to be accurate, then the files that requires, then the connections between them. Work is split into phases that each end with something working, and phases into small plan files (about 2,000 tokens each) of test-first tasks that leave no design decision to the implementer.
 
 **Reviews the spec with fresh eyes.** Reviewers with no conversation history check that the spec can be followed, that the design delivers the truths, and that each plan can be implemented as written.
+
+**Checks the environment before asking you.** A preflight derives what the plan needs (runtimes, tools, services, network, credentials), checks each one, and runs a small end-to-end smoke test. Anything missing is listed with its install command; nothing outside the project is installed without your approval.
 
 **Asks you once.** You approve the build plan, with five documents to judge it by. After that it comes back to you only if something would make the PR/FAQ untrue, a newly discovered choice would force a rebuild if wrong, or it needs something only you can supply.
 
@@ -130,6 +133,7 @@ docs/build/<slug>/
   architecture.md  schema.md  api.md  phases.md  explained-simply.md
   phases/01-<name>/01-<plan>.md   plan files, with summaries as they complete
   reviews/                        reviewer reports
+  preflight.md                    what the plan needs from the machine, and whether it is there
   state.md  ledger.md             where the build is, and what happened
   report.md                       final verification against the PR/FAQ
 docs/security/<slug>/
@@ -148,7 +152,7 @@ docs/security/<slug>/
 
 ## Status
 
-Version 0.3.1. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
+Version 0.4. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
 
 ## Licence and credits
 

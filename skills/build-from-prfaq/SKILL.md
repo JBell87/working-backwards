@@ -17,7 +17,7 @@ You coordinate; you do not implement. Your context is the scarcest thing in a lo
 | 2. Spec | Derive the build spec backward from the PR/FAQ, as phases of small plan files | `references/spec.md` |
 | 3. Spec review | Fresh-context passes: comprehension, design critique, implementation readiness | `references/spec-review.md` |
 | 4. Deliverables | Architecture diagram, data schema, interface reference, build phases, plain explanation | `references/deliverables.md` |
-| 5. Approval | The user approves the build plan. Always stop here. | below |
+| 5. Preflight and approval | Prove this environment can carry out the plan, then the user approves it. Always stop here. | `references/preflight.md`, below |
 | 6. Build | Dependency waves in parallel, one fresh agent per task | `references/execution.md` |
 | 7. Review | Lensed reviewers per task, branch review per phase, full verification at the end; gap plans and the fix loop | `references/review.md` |
 | 8. Security review | Authorized scans of the code, the cloud configuration, and the running product; fixes; risk acceptance | the `security-review` skill |
@@ -81,7 +81,7 @@ Rules that keep this honest:
 - **Criticality is set in the spec, not at dispatch time.** Each plan carries `criticality: low | normal | high`. High means a defect would be expensive or silent: data integrity, money, authentication or permissions, migrations, concurrency, a public interface, or anything several other plans depend on. Low means mechanical and locally verifiable. Everything else is normal.
 - **Implementation tier follows the task.** Start from the plan's criticality, then move up one tier if the task needs judgment the plan could not remove (debugging, integrating with unfamiliar code), and down one if it is purely mechanical.
 - **Review tier follows criticality, and is never below the implementer's tier.** A weaker reviewer checking a stronger implementer finds nothing.
-- **Escalate on evidence, not hope.** An agent that reports it is blocked, or a task still failing review after three fix rounds, moves up a tier or to higher effort. Do not start high "to be safe"; the plan format exists so that cheaper models succeed.
+- **Escalate on evidence, not hope.** An agent that reports it is blocked by the work itself, or a task still failing review after three fix rounds, moves up a tier or to higher effort. An agent blocked by the environment (a missing tool, a service that will not start) is not a model problem; handle it as `references/preflight.md` section 8 says. Do not start high "to be safe"; the plan format exists so that cheaper models succeed.
 - **Record the model used for every dispatch in the ledger.** Patterns in the ledger (a tier that keeps failing a kind of task) are how you adjust mid-build.
 - If the harness cannot select models, say so once at approval and run everything on the session's model. If it offers an effort setting but not model choice, use effort as the tiers.
 
@@ -95,9 +95,9 @@ Give each agent exactly: its prompt file path, the paths of the files it must re
 
 If the session has no subagent tool, fresh-context review is impossible and parallel execution is not available. Do not silently substitute. Tell the user plainly what is lost (the reviews will be done by the same context that wrote the work, and tasks will run one at a time), and get their agreement before continuing. If they agree, run each review as a separate pass that re-reads only the files a fresh reviewer would get, and note "inline review" in the ledger for each.
 
-## Stage 5: Approval
+## Stage 5: Preflight and approval
 
-After the deliverables exist, stop and present the build plan. This gate is never skipped, including in unattended runs, because everything after it spends real time and money on the user's behalf.
+After the deliverables exist, run the preflight in `references/preflight.md`: derive what the plan needs from this environment, check each requirement, and prove the toolchain end to end with a small smoke test. Then stop and present the build plan. This gate is never skipped, including in unattended runs, because everything after it spends real time and money on the user's behalf.
 
 Show, briefly:
 
@@ -105,11 +105,12 @@ Show, briefly:
 - Size: phases, plans, tasks, and the number of waves in the first phase.
 - Decisions logged so far, and any "ask first" questions still open.
 - Spec review outcome: rounds run, and any findings left open with their severity.
+- The preflight result: whether the environment is ready; anything missing, with the exact install command, for the user to approve or decline; anything only the user can supply; anything that could not be verified. Nothing outside the project is installed without this approval.
 - The model plan: which tier each kind of job will use, and whether reviews will be fresh-context or inline.
 - What will happen in git: branch name, commit per task, and whether a draft pull request will be opened.
 - That a security review follows the build and will ask for separate authorization before scanning anything.
 
-Then ask for approval. "Approved" covers the build as presented; a change to the PR/FAQ or a new "ask first" decision still comes back to the user.
+Then ask for approval. Do not start a build whose first phase has an unmet requirement: get it installed, supplied, or planned around first. "Approved" covers the build as presented, including the installs listed; a change to the PR/FAQ or a new "ask first" decision still comes back to the user.
 
 ## Stage 8: Security review
 
@@ -138,7 +139,7 @@ A build outlives any one session. Three kinds of file make it resumable, and you
 - `ledger.md`: what happened. One appended line per event: task dispatched, task reviewed, fix round, commit, phase review, escalation, decision. Never edited.
 - `<plan>-summary.md`: what a finished plan produced. Written when the plan's last task passes review.
 
-When invoked on a build that already has a `state.md`, read it and the tail of the ledger, confirm the branch and last recorded commit match git, and continue from the recorded point. If git and the ledger disagree, trust git, record the discrepancy in the ledger, and re-review whatever is unaccounted for before building on it.
+When invoked on a build that already has a `state.md`, read it and the tail of the ledger, confirm the branch and last recorded commit match git, check that this is the machine recorded in `preflight.md` (re-run the preflight if it is not), and continue from the recorded point. If git and the ledger disagree, trust git, record the discrepancy in the ledger, and re-review whatever is unaccounted for before building on it.
 
 ## Credits
 

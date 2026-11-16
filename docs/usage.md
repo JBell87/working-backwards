@@ -41,7 +41,7 @@ working-backwards/
 |---|---|
 | `working-backwards` skill | Turns an idea into a PR/FAQ (press release and FAQs), coaches you through one, or critiques one you wrote. Hands software ideas to the build. One file. |
 | `build-from-prfaq` skill | The orchestrator. Locks the PR/FAQ, derives and reviews a build spec, produces five planning documents, waits for your approval, runs a parallel test-first build with reviews, and verifies the result against the PR/FAQ. |
-| `build-from-prfaq/references/` | One guide per stage (spec, spec review, deliverables, execution, review), loaded only when that stage starts. |
+| `build-from-prfaq/references/` | One guide per stage (spec, spec review, deliverables, preflight, execution, review), loaded only when that stage starts. |
 | `build-from-prfaq/references/prompts/` | Instructions for each agent the orchestrator dispatches: the implementer, three spec reviewers, three task reviewers, the phase reviewer, the final verifier, and the re-reviewer. |
 | `build-from-prfaq/references/templates/` | File formats: spec, plan, state, ledger, plan summary. |
 | `build-from-prfaq/scripts/check_spec.py` | Mechanical checks on a build spec: plan size, required fields, scope-shrinking words, dependency order, overlapping files in a wave, coverage of every truth. |
@@ -109,11 +109,11 @@ Build status.
 
 **Where it waits for you**
 
-1. **Plan approval**, always, after the five planning documents exist.
+1. **Plan approval**, always, after the five planning documents exist and the preflight has checked the environment. The same approval covers any installs the preflight lists.
 2. **Security review authorization**, after the build.
 3. During the build, only for something that would make the PR/FAQ untrue, a newly discovered choice that would force a rebuild if wrong, or something only you can supply.
 
-**What you get:** in `docs/build/<slug>/`: the spec, `architecture.md`, `schema.md`, `api.md`, `phases.md`, `explained-simply.md`, the plan files and their summaries, reviewer reports, `state.md`, `ledger.md`, and the final `report.md`. In git: a `build/<slug>` branch with one commit per reviewed task.
+**What you get:** in `docs/build/<slug>/`: the spec, `preflight.md`, `architecture.md`, `schema.md`, `api.md`, `phases.md`, `explained-simply.md`, the plan files and their summaries, reviewer reports, `state.md`, `ledger.md`, and the final `report.md`. In git: a `build/<slug>` branch with one commit per reviewed task.
 
 ## `security-review`
 

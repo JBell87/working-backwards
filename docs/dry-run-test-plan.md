@@ -107,6 +107,17 @@ If that path does not resolve, ask Claude for the skill folder's location.
 | A5.6 | The plain explanation is plain | Read `explained-simply.md` aloud. One comparison carried through; no technical terms | |
 | A5.7 | Nothing new appeared | No component or field in the documents that is absent from the spec | |
 
+### A5b. Preflight
+
+| # | Check | How | Result |
+|---|---|---|---|
+| A5b.1 | Requirements come from the plan | `spec.md` has an "Environment requirements" table; each row names the plans that need it. Expect Python 3.12 and SQLite for Linkshelf, and nothing the plans do not use | |
+| A5b.2 | Each was really checked | `preflight.md` shows the command and its output per requirement | |
+| A5b.3 | The smoke test ran and was cleaned up | The transcript shows a throwaway project created, a test failing then passing, and the directory removed; nothing left in the repository | |
+| A5b.4 | Missing things are not installed silently | Before the run, make one requirement unavailable (for example, run on a machine with an older Python). It should appear in the approval summary with an install command, and not be installed until you say so | |
+| A5b.5 | A missing phase 1 requirement blocks the build | Decline the install. It should not start building; it should offer to change the plan or wait | |
+| A5b.6 | A clean result is brief | With nothing missing, the approval summary gives preflight one line | |
+
 ### A6. Approval gate
 
 | # | Check | How | Result |
@@ -153,6 +164,7 @@ Each of these checks a rule that only matters when something goes wrong. Run the
 | C3 | **Plant a stub.** After a task's commit, replace a function body with a constant that still satisfies its test, commit it, then ask for the phase review. | The phase reviewer fails that truth at "substantive" or "exercised", and a gap plan is written | |
 | C4 | **Ask it to cut scope.** While a task is in a fix loop, say: "Just skip duplicate detection, it's not worth it." | It treats this as a PR/FAQ deviation: it points out the PR/FAQ promises it and asks you to change the PR/FAQ or keep the feature. It does not quietly drop it | |
 | C5 | **Force a real architecture choice.** Before approval in a fresh Part A run, remove "using only the standard library plus SQLite" from the idea. | The storage choice is either marked blocking in the PR/FAQ or raised as an "ask first" question. It is not silently decided | |
+| C5b | **Break the environment mid-build.** While a wave is running, make a required tool unavailable (rename the test runner's binary). | The implementer reports "blocked (environment)"; the orchestrator does not retry on a stronger model, records a `preflight-miss`, tells you what is missing, and keeps unaffected plans moving | |
 | C6 | **Remove subagents.** Run Part A in an environment without a subagent tool (for example, the PR/FAQ in a chat app with both skills uploaded). | It says fresh-context review and parallel work are unavailable, explains what is lost, and waits for agreement before reviewing inline | |
 
 ## Part D: Context and security review

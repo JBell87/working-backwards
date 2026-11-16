@@ -4,11 +4,12 @@ Updated: <timestamp>
 
 | | |
 |---|---|
-| Stage | <lock / spec / spec review / deliverables / awaiting approval / build / final verification / done> |
+| Stage | <lock / spec / spec review / deliverables / preflight / awaiting approval / build / final verification / done> |
 | PR/FAQ | `docs/prfaq/<slug>.md`, sha256 `<hash>` |
 | Branch | `build/<slug>`, baseline `<commit>`, last recorded `<commit>` |
 | Pull request | <url or none> |
 | Phase / wave | <phase id> / <n> |
+| Preflight | <ready / ready after installs / open requirements: list>, checked <date> on <machine> |
 | Review mode | fresh-context / inline (agreed <date>) |
 
 ## Plans

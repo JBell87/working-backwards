@@ -89,7 +89,8 @@ It checks front matter, the size cap, scope-shrinking language, dependency order
 
 ```
 docs/build/<slug>/
-  spec.md                      truths, never list, artifacts, connections, phases, coverage, decision log
+  spec.md                      truths, never list, artifacts, connections, phases, coverage,
+                               environment requirements, decision log
   state.md                     from templates/state.md
   ledger.md                    from templates/ledger.md
   phases/

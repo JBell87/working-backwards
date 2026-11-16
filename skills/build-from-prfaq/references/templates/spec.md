@@ -42,6 +42,14 @@ Out of scope for the first version, from the PR/FAQ. No plan may build these.
 
 Checks: every truth has a plan and an outer-surface test; every artifact has exactly one creating plan; every connection has a task; nothing planned is on the Never list or absent from the PR/FAQ.
 
+## Environment requirements
+
+What the plans need from the machine they run on. Filled in at preflight.
+
+| Requirement | Minimum | Needed by | First phase | Check |
+|---|---|---|---|---|
+| <runtime, tool, service, credential name> | <version> | <plan ids> | <n> | `<command>` |
+
 ## Decision log
 
 Append-only. Decisions made without asking, most recent last.

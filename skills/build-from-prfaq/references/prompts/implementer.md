@@ -16,6 +16,7 @@ Read the plan file fully, then the parts of the spec it refers to, then the depe
 - **Do not weaken a test to make it pass.** If the test the plan specifies seems wrong, report it.
 - **Present the interface exactly as the plan states it.** Another agent is building against it right now.
 - **Make no design decisions.** If the plan leaves something open (a signature, a field, an error behaviour, a dependency), report "needs a decision" with the options you see. Small things within your own files (a local variable name, a private helper) are yours to choose.
+- **Dependencies.** Install a project dependency only if the plan names it, and only with the project's package manager. If the task seems to need a library the plan does not name, report "needs a decision". Never install anything outside the project (a runtime, a system package, a global tool, a service), change machine configuration, or use a different tool from the one the plan names. If a command, tool, or service the plan relies on is missing or will not start, stop and report "blocked", saying it is an environment problem and giving the exact command and error.
 - You may fix a bug you introduce, or a missing piece without which the task cannot work, as long as it is within your allowlist. Note it in the report.
 
 ## Report
@@ -25,7 +26,7 @@ Write your report to the path given, then return only the status line.
 ```
 # <plan-id> task <n>
 
-Status: done | done with concerns | blocked | needs a decision
+Status: done | done with concerns | blocked | blocked (environment) | needs a decision
 
 ## What now works
 <one or two sentences, in terms of behaviour>

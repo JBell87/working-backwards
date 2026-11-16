@@ -1,6 +1,6 @@
 # Stage 6: Build
 
-Begin only after approval. Work one phase at a time; within a phase, one wave at a time; within a wave, all plans in parallel.
+Begin only after approval. At the start of each phase, re-run the preflight checks for that phase's requirements (`preflight.md` section 7); a phase with an unmet requirement does not start. Work one phase at a time; within a phase, one wave at a time; within a wave, all plans in parallel.
 
 ## Set up
 
@@ -50,7 +50,9 @@ Sort every non-"done" return with the rules in SKILL.md under "Who decides what"
 - **A choice the plan left open**: the spec failed the zero-decision rule. Decide and log, amend the plan, and re-dispatch. If the choice would force a rebuild, ask first.
 - **A change that alters the structure the spec laid out** (a new component, a different data shape, a different interface): do not let the implementer proceed. On the Reasoning tier, decide whether the spec is wrong. If so, amend the spec and every plan it touches, note which completed work is affected, and schedule a gap plan for it.
 - **Anything that would make the PR/FAQ untrue**: stop that plan and ask the user. Other independent plans continue.
-- **Blocked**: move up one model tier or raise effort and re-dispatch with the report so far. If it is blocked on something outside the repository (a credential, a service, a human action), that is a question for the user; batch such questions and keep independent plans moving.
+- **Blocked by the work**: move up one model tier or raise effort and re-dispatch with the report so far.
+- **Blocked by the environment** (a command not found, a dependency that will not install, a service that will not start): do not escalate the model. Follow `preflight.md` section 8: decide whether it is a declared project dependency, an undeclared one, something missing outside the project, or a change since preflight, and act accordingly. Nothing outside the project is installed without the user's approval.
+- **Blocked on something only the user can supply** (a credential, an account, a human action): ask the user; batch such questions and keep independent plans moving.
 
 ## Git and GitHub
 
