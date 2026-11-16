@@ -20,7 +20,8 @@ You coordinate; you do not implement. Your context is the scarcest thing in a lo
 | 5. Approval | The user approves the build plan. Always stop here. | below |
 | 6. Build | Dependency waves in parallel, one fresh agent per task | `references/execution.md` |
 | 7. Review | Lensed reviewers per task, branch review per phase, full verification at the end; gap plans and the fix loop | `references/review.md` |
-| 8. Report | Every PR/FAQ promise, the evidence for it, and anything not delivered | `references/review.md` |
+| 8. Security review | Authorized scans of the code, the cloud configuration, and the running product; fixes; risk acceptance | the `security-review` skill |
+| 9. Report | Every PR/FAQ promise, the evidence for it, security outcome, and anything not delivered | `references/review.md` |
 
 Read each reference when you reach its stage, not before; they are written to be loaded one at a time. Prompts for the agents you dispatch are in `references/prompts/`, and file formats are in `references/templates/`.
 
@@ -89,8 +90,28 @@ Show, briefly:
 - Spec review outcome: rounds run, and any findings left open with their severity.
 - The model plan: which tier each kind of job will use, and whether reviews will be fresh-context or inline.
 - What will happen in git: branch name, commit per task, and whether a draft pull request will be opened.
+- That a security review follows the build and will ask for separate authorization before scanning anything.
 
 Then ask for approval. "Approved" covers the build as presented; a change to the PR/FAQ or a new "ask first" decision still comes back to the user.
+
+## Stage 8: Security review
+
+After final verification passes, invoke the `security-review` skill (it may be listed with a plugin prefix) for this build's slug. It asks the user for written authorization before any scan, so this is a second point where the build waits for the user; say so at the approval gate in Stage 5 so it is expected.
+
+- Its fixes to code and infrastructure code come back through this build's gap plans, fix loop, and reviews.
+- A critical or high finding that cannot be fixed does not block the build. It must be reported clearly and explicitly accepted by the user; `security-review` handles that conversation and records it.
+- If the user declines the security review or cannot authorize it now, record that in `state.md` and say in the final report that no security review was done. Do not describe the build as secure.
+- If `security-review` is not available, say so and continue to the report.
+
+## Keeping your context under control
+
+A build is long, and the harness will compact this conversation when it fills. You cannot trigger or prevent that, so work in a way that makes it harmless.
+
+- **State goes to disk before the next action, every time.** After compaction, `state.md` and the ledger are what you know. Anything that exists only in conversation is gone.
+- **Do not read what an agent can read for you.** Take status lines from agents, not reports. When you need what is in a report or a diff, open that one file, or ask a Fast-tier agent for the three lines that matter. Never load plan files, diffs, or scanner output in bulk.
+- **Use the boundaries.** At the end of each phase, once summaries, state, and ledger are written, you are at a clean point. If the session has been long, tell the user so: they can compact now or start a fresh session and say "resume the build", and nothing is lost. In an unattended run, continue.
+- **After compaction or a resumed session, re-orient before acting.** The plugin installs a hook that reminds you a build is in progress and where its state is. Whether or not you see that reminder, if you find yourself mid-build without the details, stop: reload this skill, read `state.md` and the last thirty ledger lines, check them against git, and only then continue. Re-read the reference for the stage you are in.
+- **The rules survive compaction even if your memory of them does not.** You are still the orchestrator; you still do not implement or fix; PR/FAQ deviations still go to the user.
 
 ## State and resuming
 

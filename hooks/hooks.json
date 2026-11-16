@@ -1,0 +1,17 @@
+{
+  "description": "Re-orient the build orchestrator after context compaction or a resumed session",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/resume-build.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

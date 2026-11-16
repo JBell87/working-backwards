@@ -1,7 +1,7 @@
 {
   "name": "working-backwards",
-  "description": "Start from the customer: turn an idea into a PR/FAQ, then orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true.",
-  "version": "0.2.0",
+  "description": "Start from the customer: turn an idea into a PR/FAQ, orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true, then run an authorized security review.",
+  "version": "0.3.0",
   "author": {
     "name": "JBell87"
   },
@@ -13,6 +13,7 @@
     "product",
     "tdd",
     "orchestration",
-    "multi-agent"
+    "multi-agent",
+    "security-review"
   ]
 }

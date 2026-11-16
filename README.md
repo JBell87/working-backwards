@@ -2,10 +2,11 @@
 
 A Claude Code plugin for the Working Backwards method: write the press release and FAQ for a product before building it, then build software until every sentence of that document is true.
 
-It has two skills:
+It has three skills:
 
 - **`working-backwards`** turns an idea into a PR/FAQ.
 - **`build-from-prfaq`** turns the PR/FAQ into working software, by orchestrating a reviewed build spec and a parallel, test-first, multi-agent build.
+- **`security-review`** runs an authorized security review of what was built and where it is deployed. It also works on its own, on any project you own.
 
 ## The flow
 
@@ -24,6 +25,12 @@ idea
              └─ after each phase: whole-branch, goal-backward verification
              └─ gaps: gap plans and a fix loop that escalates models
          └─ final verification against the PR/FAQ, sentence by sentence
+         └─ YOU AUTHORIZE THE SECURITY REVIEW                security-review
+             └─ scans: code, secrets, dependencies, infrastructure code,
+                cloud configuration, network exposure, running application
+             └─ findings verified, fixed, re-scanned
+             └─ you accept or reject any serious risk left open
+         └─ final report
 ```
 
 ## What `working-backwards` does
@@ -51,6 +58,8 @@ It does not invent metrics, research, or customers. Gaps are marked as placehold
 
 **Keeps state on disk.** A state file, an append-only ledger, a summary per plan, and one commit per reviewed task, so a build can stop and resume. With a GitHub remote it keeps a draft pull request up to date; it never merges or pushes to the default branch.
 
+**Survives a full context window.** State is written to disk before every next action, the orchestrator reads status lines instead of reports, and a hook points it back at its state file after the conversation is compacted or resumed.
+
 ### How decisions are made
 
 | Kind of decision | What happens |
@@ -62,6 +71,30 @@ It does not invent metrics, research, or customers. Gaps are marked as placehold
 ### Requirements
 
 The build is designed for Claude Code, where it can start subagents and choose their models. Without subagents it tells you what is lost (fresh-context review and parallel work) and asks before continuing with inline review.
+
+## What `security-review` does
+
+It orchestrates established open-source scanners; it does not contain attack techniques of its own.
+
+| Layer | Looks for | Scanner |
+|---|---|---|
+| Code | Injection, broken authorization, unsafe patterns | Semgrep |
+| Secrets | Stored passwords and keys, including in git history | TruffleHog |
+| Dependencies and images | Known-vulnerable packages | Trivy or OSV-Scanner |
+| Infrastructure code | Public storage, missing encryption, open firewalls, before deployment | Checkov or Trivy |
+| Live cloud configuration | The same, on what is deployed: AWS, Azure, Google Cloud | Prowler, read-only |
+| Network exposure | Unintended open services, clear-text protocols, weak TLS | Nmap, testssl.sh |
+| Running application | Missing protections, leaked information, and (optionally) injection and access-control flaws | OWASP ZAP, Nuclei |
+
+DigitalOcean and other providers Prowler does not cover are audited from infrastructure code plus a manual read-only checklist, and reported as partial coverage.
+
+**Nothing runs without your written authorization**, which names each target, the intensity for each environment, and an expiry. Live targets are checked against your cloud account before any traffic is sent.
+
+**What it will not do, whatever it is asked:** denial-of-service or load testing, password guessing or cracking, exploiting a finding or extracting data, changing live infrastructure, or scanning anything you have not authorized. Resilience to overload is assessed from configuration.
+
+**Findings are verified before they are reported**, then rated for this system. Critical and high findings are fixed where possible and re-scanned. Anything serious that cannot be fixed does not block the build, but you are asked to accept each risk explicitly, and that is recorded. Nothing is accepted on your behalf.
+
+You need the scanners installed, or Docker to run their official images. A scanner that is missing is reported as a gap, never as a pass. This is automated scanning, not a professional penetration test.
 
 ## Install
 
@@ -80,6 +113,7 @@ To use only the PR/FAQ skill elsewhere, copy `skills/working-backwards/` into yo
 - "Coach me through a PR/FAQ for ..."
 - "Review my PR/FAQ before I send it"
 - "Build this PR/FAQ" or "Resume the build"
+- "Run a security review of this project"
 
 ## What a build writes
 
@@ -92,6 +126,9 @@ docs/build/<slug>/
   reviews/                        reviewer reports
   state.md  ledger.md             where the build is, and what happened
   report.md                       final verification against the PR/FAQ
+docs/security/<slug>/
+  authorization.md                what you authorized, and when
+  findings.md  risk-acceptance.md  report.md
 ```
 
 ## Examples
@@ -105,10 +142,12 @@ docs/build/<slug>/
 
 ## Status
 
-Version 0.2. `build-from-prfaq` is new and **has not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
+Version 0.3. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
 
 ## Licence and credits
 
 MIT. Based on the Working Backwards process described in Colin Bryar and Bill Carr's book *Working Backwards*. Not affiliated with or endorsed by Amazon.
 
 The build process draws on ideas from [Superpowers](https://github.com/obra/superpowers) (Jesse Vincent, MIT), [Get Shit Done](https://github.com/gsd-build/get-shit-done) (Lex Christopherson, MIT), the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD) (BMad Code, LLC, MIT), and the [Elephant-Goldfish Model](https://github.com/google/elephant-goldfish-model) (Google LLC, Apache-2.0). It is written independently, contains no text or code from them, and is not affiliated with or endorsed by any of them.
+
+The security review runs independent open-source scanners, each under its own licence: Semgrep, TruffleHog, Trivy, OSV-Scanner, Checkov, Prowler, Nmap, testssl.sh, OWASP ZAP, and Nuclei. This plugin does not bundle them and is not affiliated with or endorsed by their authors.

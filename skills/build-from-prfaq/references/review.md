@@ -87,7 +87,7 @@ For findings routed to patch:
 
 Append a ledger line per round: round number, findings addressed and open, model used, commit.
 
-## Stage 8: The final report
+## Stage 9: The final report
 
 Write `docs/build/<slug>/report.md` and present its summary to the user:
 
@@ -95,7 +95,10 @@ Write `docs/build/<slug>/report.md` and present its summary to the user:
 - **The PR/FAQ re-read**: any sentence that is not true of the built product, quoted, with what the product does instead.
 - **Not delivered**: anything promised and not built, and why.
 - **Decisions made on the user's behalf**: the decision log, most consequential first.
+- **Security**: whether a security review ran, its coverage, findings fixed, and any critical or high findings left open, with whether the user accepted each risk. If none ran, say so.
 - **Deferred findings**.
 - **Numbers**: phases, plans, tasks, fix rounds, gap plans, and how often each model tier was used and escalated.
+
+Write this report after Stage 8 (the security review) has finished or been declined.
 
 State plainly whether the PR/FAQ is now accurate. If it is not, say which sentences, and offer the two honest options: build the gap, or ask the user to change the PR/FAQ.

@@ -7,7 +7,7 @@
     {
       "name": "working-backwards",
       "source": "./",
-      "description": "Start from the customer: turn an idea into a PR/FAQ, then orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true."
+      "description": "Start from the customer: turn an idea into a PR/FAQ, orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true, then run an authorized security review."
     }
   ]
 }
