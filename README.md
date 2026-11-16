@@ -88,6 +88,10 @@ It orchestrates established open-source scanners; it does not contain attack tec
 
 DigitalOcean and other providers Prowler does not cover are audited from infrastructure code plus a manual read-only checklist, and reported as partial coverage.
 
+**It evaluates only what you put in scope**: after a build, that build's own resources; run directly, the resources you name. The rest of the account is left alone.
+
+**It writes the read-only permissions for you.** Tell it your platform and whether you want commands to run or files with instructions, and it produces the policy and setup steps for a dedicated audit identity, plus the steps to remove it afterwards. You create the identity; it never does.
+
 **Nothing runs without your written authorization**, which names each target, the intensity for each environment, and an expiry. Live targets are checked against your cloud account before any traffic is sent.
 
 **What it will not do, whatever it is asked:** denial-of-service or load testing, password guessing or cracking, exploiting a finding or extracting data, changing live infrastructure, or scanning anything you have not authorized. Resilience to overload is assessed from configuration.
@@ -108,6 +112,8 @@ In Claude Code:
 To use only the PR/FAQ skill elsewhere, copy `skills/working-backwards/` into your skills folder or upload it as a skill in the Claude apps. It will stop after delivering the PR/FAQ.
 
 ## Use
+
+Full reference, with every input each skill accepts: [`docs/usage.md`](docs/usage.md).
 
 - "Working backwards on this idea: ..."
 - "Coach me through a PR/FAQ for ..."
@@ -142,7 +148,7 @@ docs/security/<slug>/
 
 ## Status
 
-Version 0.3. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
+Version 0.3.1. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
 
 ## Licence and credits
 

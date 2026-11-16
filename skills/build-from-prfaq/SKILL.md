@@ -27,6 +27,23 @@ Read each reference when you reach its stage, not before; they are written to be
 
 All build files live in `docs/build/<slug>/` beside the PR/FAQ at `docs/prfaq/<slug>.md`.
 
+## Inputs
+
+Take these from what the user says. None is a command-line flag; they are things the user states in words, at the start or at the approval gate.
+
+| Input | Meaning | Default |
+|---|---|---|
+| PR/FAQ path | The document to build | The one file in `docs/prfaq/`; ask if there are several or none |
+| "Plan only" | Run Stages 1 to 4, present the plan, and stop without asking to build | Off |
+| "Phase N only" / "stop after phase N" | Build part of the plan, then stop with state saved | Build every phase |
+| "Resume" | Continue a build from `state.md` | Assumed when a `state.md` exists |
+| "Status" | Report where the build is from `state.md` and the ledger, and do nothing else | - |
+| "No pull request" | Keep everything local | Open a draft pull request when a GitHub remote exists |
+| "Skip the security review" | Go from final verification to the report | Run it |
+| Technical constraints | Language, framework, platform, hosting, anything already decided | Decide and log |
+
+Constraints the user states are facts, not decisions to revisit. Anything unstated is yours to decide under "Who decides what".
+
 ## Stage 1: Lock the PR/FAQ
 
 The PR/FAQ is the contract. Once the build starts, nobody edits it to match what got built.

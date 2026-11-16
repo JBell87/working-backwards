@@ -49,6 +49,7 @@ Break each phase into plan files, each a small, independently reviewable unit of
 - **Zero decisions left to the implementer.** If an implementer would have to choose a signature, a schema field, an error behaviour, or a dependency, the plan is not finished. Make the choice (decide and log, or ask first) and write it down. State interfaces exactly, because the plan next to this one is being built by a different agent at the same time and they must meet.
 - **File allowlist.** Each plan's front matter lists every file it may create or change. Agents may not touch anything else.
 - **No scope-shrinking language.** A plan never says "simplified", "basic version", "for now", "placeholder", "stub", or "later". If the full thing does not fit in one plan, write more plans. If it should not be built at all, it belongs on the Never list, which only the PR/FAQ can extend.
+- **Tag what you deploy.** If the product creates cloud resources, every resource definition carries the tag or label `wb-build=<slug>`. The security review uses it to evaluate this build's resources and nothing else.
 - **No code in plans beyond interfaces.** Signatures, schemas, example inputs and outputs: yes. Implementations: no. Writing the code in the plan removes the test-first step and doubles the review surface.
 
 ## 6. Dependencies and waves

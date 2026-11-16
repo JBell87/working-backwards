@@ -17,6 +17,21 @@ Work out which of these the user wants; if it is unclear, ask once.
 
 Draft and Coach continue into Step 4 (handing off to the build) when the idea is software and the session can write and run code. Critique stops at the review.
 
+## Inputs
+
+Take these from what the user says. None is a command-line flag; they are things the user states in words.
+
+| Input | Meaning | Default |
+|---|---|---|
+| The idea | A description of the product, feature, or initiative; or, for Critique, an existing PR/FAQ as text or a file path | Required |
+| Mode | "draft", "coach", or "critique" | Inferred; ask once if unclear |
+| "Document only" | Stop after the PR/FAQ; do not hand off to a build | Hand off when the idea is software |
+| "With a six-pager" | Also write the six-page narrative | Off |
+| Format | A file format for the document | The session's document format |
+| Facts | Anything already decided: platform, language, data, constraints | - |
+
+State facts as facts. Anything the skill has to guess that would change what gets built is marked blocking and asked about before a build starts.
+
 ## Step 1: The five customer questions
 
 Before drafting, get an answer to each. If the user's material already answers one, don't re-ask it.

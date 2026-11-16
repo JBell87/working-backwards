@@ -2,11 +2,13 @@
 
 A read-only audit of what is deployed, through the provider's own interfaces, using the audit credentials from the authorization record. It sends no traffic to the application and changes nothing, so it runs at every intensity level.
 
-Confirm the identity in use belongs to the account in the record before running anything. If the credentials can write, stop and ask for read-only ones.
+Confirm the identity in use is the review identity from `permissions.md` and belongs to the account in the record before running anything. If the credentials can write, stop and ask for read-only ones.
+
+**Only resources in `scope.md` are evaluated.** Run the scanner with its filters set to the in-scope regions, subscription or project, and resources (by identifier or by the `wb-build` tag), and drop any result for a resource that is not on the list before triage. Account-wide settings are evaluated only if the user opted in.
 
 ## AWS, Azure, Google Cloud
 
-**Prowler**, one run per account, subscription, or project in the record, across all regions in use, with output in JSON. Use its default checks; add a compliance framework only if the user asks for one.
+**Prowler**, one run per account, subscription, or project in the record, limited to the regions and resources in scope, with output in JSON. Use its default checks; add a compliance framework only if the user asks for one.
 
 Give each run its own agent. Prowler's output is large: the agent keeps the raw file in `raw/` and normalizes only failed checks.
 
@@ -20,7 +22,7 @@ Check Prowler's current list of supported providers first; it grows. If the prov
 
 ## What the audit must cover
 
-Whichever tool runs, the findings should let you answer each of these for every account. If the tool gives no answer for an area, say so in the coverage record.
+Whichever tool runs, the findings should let you answer each of these for the resources in scope. Skip an area that has no in-scope resources, and mark the identity area as account-wide unless the user opted in. If the tool gives no answer for an area, say so in the coverage record.
 
 | Area | Questions |
 |---|---|
@@ -33,6 +35,9 @@ Whichever tool runs, the findings should let you answer each of these for every 
 | **Compute** | Can the instance metadata service be read by a request forged through the application (is the hardened version enforced)? Are functions and containers running with more permissions than they need? Are images and runtimes out of date? |
 | **Logging and detection** | Is audit logging on in every region, and protected from deletion? Are the provider's threat detection and configuration recording services on? Does anyone get alerted? |
 | **Resilience** | Is DDoS protection enabled at the intended tier? Is there a firewall and rate limiting at the edge? Are there spending alarms? |
+| **Functions and serverless** | Do functions hold secrets in their environment or configuration? Are their endpoints public without authentication? Are their roles broader than the function needs? |
+| **Service identities** | Do service accounts, managed identities, or instance roles carry more access than the workload uses? Are there long-lived keys for them? Can one workload act as another? |
+| **Source and artifacts** | Are code repositories, container registries, or build artifacts hosted in the account readable by the public? |
 | **Kubernetes**, if used | Is the control plane public? Are workloads privileged? Are secrets encrypted? Is network policy in place? |
 
 ## Reading the results

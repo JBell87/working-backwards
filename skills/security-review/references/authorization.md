@@ -9,6 +9,7 @@ From the repository, the build's `architecture.md` if there is one, and the user
 - The repository and any container images it builds.
 - Infrastructure code (Terraform, CloudFormation, Bicep, Pulumi, Kubernetes manifests, Dockerfiles).
 - Cloud accounts the product is deployed in: AWS accounts, Azure subscriptions, GCP projects, DigitalOcean teams. Get the identifier of each.
+- **The specific cloud resources to evaluate.** The review covers the resources of the current build, or the resources the user names, and not the rest of the account. Build the list as `permissions.md` section 1 describes and save it as `scope.md`.
 - Public entry points: hostnames, IP addresses, URLs, APIs.
 - Environments: which of these are production, and whether a staging copy exists.
 
@@ -34,7 +35,7 @@ If a staging environment exists, recommend running Thorough there and Standard o
 
 ## 4. Credentials
 
-- **Cloud accounts: read-only.** Ask the user to provide a role or identity limited to security auditing, following the scanner's current documentation for the minimum permissions. As a guide at the time of writing: on AWS the managed policies SecurityAudit and ViewOnlyAccess; on Azure the Reader and Security Reader roles; on GCP the Viewer and Security Reviewer roles; on DigitalOcean a read-only token. If the credentials supplied can write, say so and ask for narrower ones; do not proceed on the promise that you will only read.
+- **Cloud accounts: a dedicated read-only identity that you specify and the user creates.** Follow `permissions.md`: ask whether they want the permissions as commands or as files, and whether Standard or Strict, then generate the policy and setup steps for their platform, scoped to `scope.md`. If the user already has an audit identity, use it only after confirming it is read-only. If the credentials supplied can write, say so and ask for narrower ones; do not proceed on the promise that you will only read.
 - **The application:** if it has a login, ask for a dedicated test account, never a real user's.
 - **How they are supplied:** through the environment, a named profile, or the provider's own login command, set up by the user in their terminal. Never ask for a secret to be pasted into the conversation, and never write one to a file.
 
@@ -42,7 +43,7 @@ If a staging environment exists, recommend running Thorough there and Standard o
 
 Fill in `templates/authorization.md` and save it as `docs/security/<slug>/authorization.md`. Then show it to the user and ask them to confirm it, in so many words. A general "go ahead" given before they have seen the record is not confirmation.
 
-The record states: who is authorizing, the date, every target by identifier, what is excluded, the intensity level per environment, the scan window, and the user's statements that they own or are authorized to test each target and have checked the provider rules.
+The record states: who is authorizing, the date, every target by identifier (with `scope.md` as the list of cloud resources), the audit identity and its permissions, what is excluded, the intensity level per environment, the scan window, and the user's statements that they own or are authorized to test each target and have checked the provider rules.
 
 **Authorization is specific and it expires.** It covers the listed targets at the listed intensity during the listed window. A new target, a higher intensity, or a later date needs a new confirmation. Re-scans after fixes within the window are covered.
 
