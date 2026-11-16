@@ -76,6 +76,14 @@ Before the spec goes to review, verify and record in `spec.md`:
 
 A truth with no plan is a hole. A plan with no truth is scope creep. Fix both before review.
 
+Then run the mechanical checker bundled with this skill and fix everything it reports:
+
+```
+python3 <this skill's folder>/scripts/check_spec.py docs/build/<slug>
+```
+
+It checks front matter, the size cap, scope-shrinking language, dependency order, overlapping allowlists within a wave, and that every truth is claimed by a plan. It cannot judge whether a plan is good; that is what the review is for.
+
 ## What gets written
 
 ```

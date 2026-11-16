@@ -99,6 +99,10 @@ docs/build/<slug>/
 - [`examples/critique.md`](examples/critique.md): a review of a deliberately weak PR/FAQ.
 - [`examples/draft-and-build.md`](examples/draft-and-build.md): a PR/FAQ for a small command-line tool, built with the simple single-agent loop from version 0.1. The code is in [`examples/overdue/`](examples/overdue/). It predates `build-from-prfaq`.
 
+## Testing it
+
+[`docs/dry-run-test-plan.md`](docs/dry-run-test-plan.md) is a staged first run: a dry run to the approval gate, a one-phase build, then fault injection.
+
 ## Status
 
 Version 0.2. `build-from-prfaq` is new and **has not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
