@@ -1,9 +1,18 @@
 {
   "name": "working-backwards",
-  "description": "Start from the customer: draft, coach, or critique a PR/FAQ, then carry software ideas into a test-driven build.",
-  "version": "0.1.0",
-  "author": { "name": "JBell87" },
+  "description": "Start from the customer: turn an idea into a PR/FAQ, then orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true.",
+  "version": "0.2.0",
+  "author": {
+    "name": "JBell87"
+  },
   "repository": "https://github.com/JBell87/working-backwards",
   "license": "MIT",
-  "keywords": ["working-backwards", "prfaq", "product", "tdd"]
+  "keywords": [
+    "working-backwards",
+    "prfaq",
+    "product",
+    "tdd",
+    "orchestration",
+    "multi-agent"
+  ]
 }

@@ -1,11 +1,13 @@
 {
   "name": "working-backwards",
-  "owner": { "name": "JBell87" },
+  "owner": {
+    "name": "JBell87"
+  },
   "plugins": [
     {
       "name": "working-backwards",
       "source": "./",
-      "description": "Start from the customer: draft, coach, or critique a PR/FAQ, then carry software ideas into a test-driven build."
+      "description": "Start from the customer: turn an idea into a PR/FAQ, then orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true."
     }
   ]
 }
