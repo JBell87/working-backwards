@@ -114,8 +114,11 @@ If that path does not resolve, ask Claude for the skill folder's location.
 | A5b.1 | Requirements come from the plan | `spec.md` has an "Environment requirements" table; each row names the plans that need it. Expect Python 3.12 and SQLite for Linkshelf, and nothing the plans do not use | |
 | A5b.2 | Each was really checked | `preflight.md` shows the command and its output per requirement | |
 | A5b.3 | The smoke test ran and was cleaned up | The transcript shows a throwaway project created, a test failing then passing, and the directory removed; nothing left in the repository | |
-| A5b.4 | Missing things are not installed silently | Before the run, make one requirement unavailable (for example, run on a machine with an older Python). It should appear in the approval summary with an install command, and not be installed until you say so | |
-| A5b.5 | A missing phase 1 requirement blocks the build | Decline the install. It should not start building; it should offer to change the plan or wait | |
+| A5b.4 | Missing things are proposed, not installed | Before the run, make one requirement unavailable (for example, run on a machine without the test runner). It should appear on the list of proposed installs, and not be installed before you approve | |
+| A5b.4a | Approved installs happen without you | Approve the list. It installs the item itself, re-checks it, and records it in `preflight.md`; you run no commands | |
+| A5b.4b | Risky changes get their own question | Arrange for a requirement that needs an existing package downgraded. It should ask about that item by name even though the list was approved | |
+| A5b.5 | A missing phase 1 requirement blocks the build | In a second run, strike the item from the list. It should not start building; it should offer to change the plan or wait | |
+| A5b.7 | Isolation was tested | `preflight.md` records the worktree test: setup time, size, and how many plans can run at once | |
 | A5b.6 | A clean result is brief | With nothing missing, the approval summary gives preflight one line | |
 
 ### A6. Approval gate
@@ -137,15 +140,19 @@ In the same or a new session: "Approved. Build phase 1 only, then stop." Startin
 | B1 | A build branch was created | `git branch` shows `build/linkshelf`; the default branch has no build commits | |
 | B2 | A baseline was recorded | First build line in `ledger.md` | |
 | B3 | A wave ran in parallel | For a wave with two or more plans, the implementers were dispatched in one message | |
+| B3a | Each plan had its own worktree | During a wave, `git worktree list` shows one entry per running plan under `.worktrees/`, each on a `plan/...` branch | |
+| B3b | Worktrees were prepared first | Dependencies were set up in each worktree before its implementer started, one at a time | |
+| B3c | Plans merged only after review | `git log --merges build/linkshelf` shows one merge per plan, each after that plan's last review in the ledger; the suite ran after each merge | |
+| B3d | Worktrees were cleaned up | After the phase, `git worktree list` shows only the main checkout and no `plan/...` branches remain | |
 | B4 | One fresh agent per task | A new agent for each task; none carried from task to task | |
 | B5 | The orchestrator wrote no feature code | Every source change came from a subagent | |
-| B6 | Implementers stayed in their lane | `git show --stat` for each task commit lists only files on that plan's allowlist | |
+| B6 | Implementers stayed in their lane | `git show --stat` for each task commit lists only files on that plan's allowlist; no plan committed a lock file | |
 | B7 | Tests came first | Each task report shows the test failing, then passing, then the verification command | |
 | B8 | Reviewers matched criticality | Three reviewers for normal and high plans, one for low; high on the top tier | |
 | B9 | Reviews found something real, or said what they checked | Read two review reports. Empty praise is a fail | |
 | B10 | Triage and fixes followed the loop | Any finding has a ledger line for triage, fix round, and re-review; the orchestrator did not fix it itself | |
 | B11 | One commit per reviewed task | `git log --oneline`; messages name the plan, task, and truths | |
-| B12 | The full suite ran at each wave boundary | `wave-suite` lines in the ledger | |
+| B12 | The full suite ran after every merge | `suite` lines in the ledger following each `merge` | |
 | B13 | The phase review verified truths | `reviews/01-*/phase-review.md` has a row per truth with the four checks and evidence | |
 | B14 | The phase's truths really hold | Do it yourself: start the service, add a bookmark with `curl`, add it again, list by tag | |
 | B15 | Summaries and state were written | A `-summary.md` per finished plan; `state.md` shows phase 1 done and what is next | |
@@ -165,6 +172,8 @@ Each of these checks a rule that only matters when something goes wrong. Run the
 | C4 | **Ask it to cut scope.** While a task is in a fix loop, say: "Just skip duplicate detection, it's not worth it." | It treats this as a PR/FAQ deviation: it points out the PR/FAQ promises it and asks you to change the PR/FAQ or keep the feature. It does not quietly drop it | |
 | C5 | **Force a real architecture choice.** Before approval in a fresh Part A run, remove "using only the standard library plus SQLite" from the idea. | The storage choice is either marked blocking in the PR/FAQ or raised as an "ask first" question. It is not silently decided | |
 | C5b | **Break the environment mid-build.** While a wave is running, make a required tool unavailable (rename the test runner's binary). | The implementer reports "blocked (environment)"; the orchestrator does not retry on a stronger model, records a `preflight-miss`, tells you what is missing, and keeps unaffected plans moving | |
+| C5c | **Force a merge conflict.** Before a wave, edit two plans in it so both list the same file. | The checker should catch the overlap. If you bypass it, the second merge conflicts; the orchestrator aborts the merge and treats it as a plan gap, and does not resolve the conflict by hand | |
+| C5d | **Need an undeclared library.** Remove a dependency from the phase's manifest plan that a later plan uses. | The implementer reports "needs a decision" and does not edit the manifest; the orchestrator amends the plans | |
 | C6 | **Remove subagents.** Run Part A in an environment without a subagent tool (for example, the PR/FAQ in a chat app with both skills uploaded). | It says fresh-context review and parallel work are unavailable, explains what is lost, and waits for agreement before reviewing inline | |
 
 ## Part D: Context and security review
@@ -212,7 +221,7 @@ These are my predictions, so you can look for them first. None is confirmed.
 - **File paths inside the plugin.** The orchestrator must find its own `references/` and `scripts/` folders. If it cannot, S3 and A3.6 fail first.
 - **Model selection.** If the subagent tool in your version does not accept a model per dispatch, A4.7 and B8 fail and the ledger shows one model throughout. The skill says to report this at approval.
 - **The orchestrator doing the work.** The most likely drift on small plans is the orchestrator implementing or fixing "just this one thing" itself. B5 and B10 catch it.
-- **Parallel agents in one working tree.** Language tooling that writes shared files (caches, lock files, a shared SQLite test database) can make parallel tasks interfere. If B3 runs but tests fail intermittently, this is the cause, and worktrees should become the default.
+- **Worktree mechanics.** Plans now build in separate worktrees, which removes most interference between parallel agents but adds steps that can go wrong: dependency setup in each worktree, agents writing reports to the main checkout, and merges. Shared services (a test database, ports) are still shared; if tests fail intermittently in parallel, look there first.
 - **Review cost.** Three reviewers per task plus re-reviews is a lot of dispatches. If Part B feels slow or expensive for what it finds, the criticality thresholds are the dial.
 - **Scanner setup.** The security review depends on tools being installed or Docker being available, and on each tool's current command-line options, which the skill tells the agent to look up. Expect the first run to spend time here.
 - **Hook loading.** I placed the hook where Claude Code plugins conventionally keep them, but have not confirmed it loads. D1.1 checks this.

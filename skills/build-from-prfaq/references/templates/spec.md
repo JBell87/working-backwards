@@ -42,6 +42,12 @@ Out of scope for the first version, from the PR/FAQ. No plan may build these.
 
 Checks: every truth has a plan and an outer-surface test; every artifact has exactly one creating plan; every connection has a task; nothing planned is on the Never list or absent from the PR/FAQ.
 
+## Build setup
+
+- **Dependency setup command:** `<one command that makes a fresh checkout ready to build and test>`
+- **Full test suite:** `<command>`
+- **Shared files and their owners:** <manifest: plan id; migrations: numbering; registries: plan id>
+
 ## Environment requirements
 
 What the plans need from the machine they run on. Filled in at preflight.

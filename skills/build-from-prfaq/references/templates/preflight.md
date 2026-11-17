@@ -24,10 +24,21 @@ Checked: <date and time>. Machine: <operating system and version>, <architecture
 
 <What was created, installed, and run in the temporary directory, and the result. If it failed: the exact command and error.>
 
-## Needs your approval to install
+## Isolation
 
-| What | Why (plans) | Command | Approved? | Installed and re-checked? |
-|---|---|---|---|---|
+| | |
+|---|---|
+| Mode | worktree per plan / shared tree (why) |
+| Dependency setup command | `<command>` |
+| Setup time and size per worktree | <seconds>, <size> |
+| Plans that can run at once | <n> (disk free: <size>) |
+
+## Proposed installs
+
+Installed by the orchestrator after you approve this list. Items marked "needs its own yes" are asked about individually.
+
+| What | Why (plans) | How it will be installed | Needs its own yes? | Approved? | Installed and re-checked? |
+|---|---|---|---|---|---|
 
 ## Only you can supply
 

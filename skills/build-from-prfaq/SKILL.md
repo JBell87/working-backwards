@@ -18,7 +18,7 @@ You coordinate; you do not implement. Your context is the scarcest thing in a lo
 | 3. Spec review | Fresh-context passes: comprehension, design critique, implementation readiness | `references/spec-review.md` |
 | 4. Deliverables | Architecture diagram, data schema, interface reference, build phases, plain explanation | `references/deliverables.md` |
 | 5. Preflight and approval | Prove this environment can carry out the plan, then the user approves it. Always stop here. | `references/preflight.md`, below |
-| 6. Build | Dependency waves in parallel, one fresh agent per task | `references/execution.md` |
+| 6. Build | Dependency waves in parallel, a worktree per plan, one fresh agent per task | `references/execution.md` |
 | 7. Review | Lensed reviewers per task, branch review per phase, full verification at the end; gap plans and the fix loop | `references/review.md` |
 | 8. Security review | Authorized scans of the code, the cloud configuration, and the running product; fixes; risk acceptance | the `security-review` skill |
 | 9. Report | Every PR/FAQ promise, the evidence for it, security outcome, and anything not delivered | `references/review.md` |
@@ -105,12 +105,13 @@ Show, briefly:
 - Size: phases, plans, tasks, and the number of waves in the first phase.
 - Decisions logged so far, and any "ask first" questions still open.
 - Spec review outcome: rounds run, and any findings left open with their severity.
-- The preflight result: whether the environment is ready; anything missing, with the exact install command, for the user to approve or decline; anything only the user can supply; anything that could not be verified. Nothing outside the project is installed without this approval.
+- The preflight result: whether the environment is ready; the list of proposed installs for the user to approve, strike from, or decline, with any item that needs its own explicit yes called out; anything only the user can supply; anything that could not be verified. Nothing on the list is installed before it is approved; once it is, you install it yourself.
+- How plans will be isolated: a worktree per plan and how many at once, or the shared tree and why.
 - The model plan: which tier each kind of job will use, and whether reviews will be fresh-context or inline.
-- What will happen in git: branch name, commit per task, and whether a draft pull request will be opened.
+- What will happen in git: the build branch, a temporary branch and worktree per plan merged after review, a commit per task, and whether a draft pull request will be opened.
 - That a security review follows the build and will ask for separate authorization before scanning anything.
 
-Then ask for approval. Do not start a build whose first phase has an unmet requirement: get it installed, supplied, or planned around first. "Approved" covers the build as presented, including the installs listed; a change to the PR/FAQ or a new "ask first" decision still comes back to the user.
+Then ask for approval. Do not start a build whose first phase has an unmet requirement: get it installed, supplied, or planned around first. "Approved" covers the build as presented and the installs the user left on the list. After approval, install them, confirm the first phase is runnable, and begin; a change to the PR/FAQ or a new "ask first" decision still comes back to the user.
 
 ## Stage 8: Security review
 

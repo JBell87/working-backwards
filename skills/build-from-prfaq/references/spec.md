@@ -49,6 +49,9 @@ Break each phase into plan files, each a small, independently reviewable unit of
 - **Zero decisions left to the implementer.** If an implementer would have to choose a signature, a schema field, an error behaviour, or a dependency, the plan is not finished. Make the choice (decide and log, or ask first) and write it down. State interfaces exactly, because the plan next to this one is being built by a different agent at the same time and they must meet.
 - **File allowlist.** Each plan's front matter lists every file it may create or change. Agents may not touch anything else.
 - **No scope-shrinking language.** A plan never says "simplified", "basic version", "for now", "placeholder", "stub", or "later". If the full thing does not fit in one plan, write more plans. If it should not be built at all, it belongs on the Never list, which only the PR/FAQ can extend.
+- **Shared files have one owner.** Dependency manifests, migration sequences, and registries that several plans would otherwise edit are assigned in the spec: one plan in the phase's first wave adds every dependency the phase needs; migration numbers are assigned here, not by implementers; a single plan wires components into any central registry. Lock files and generated files appear on no allowlist; the orchestrator regenerates them after merges.
+- **Plans do not share services.** Where tests use a database, cache, or port, the plan says how they stay separate from other plans running at the same time, using the plan id passed as `WB_PLAN` (a per-plan database name or schema, a temporary instance, an unused port).
+- **Record the dependency setup command** in `spec.md`: the one command that makes a fresh checkout ready to build and test. Each plan's worktree is prepared with it.
 - **Tag what you deploy.** If the product creates cloud resources, every resource definition carries the tag or label `wb-build=<slug>`. The security review uses it to evaluate this build's resources and nothing else.
 - **No code in plans beyond interfaces.** Signatures, schemas, example inputs and outputs: yes. Implementations: no. Writing the code in the plan removes the test-first step and doubles the review surface.
 
@@ -58,7 +61,7 @@ In each plan's front matter, set `depends_on` to the plans whose output it needs
 
 - Wave 1 is every plan with no dependencies.
 - A plan's wave is one more than the highest wave among its dependencies.
-- Two plans may share a wave only if their file allowlists do not overlap. If they overlap, either move the shared file into an earlier plan that both depend on, or put one plan in a later wave.
+- Two plans may share a wave only if their file allowlists do not overlap. If they overlap, either move the shared file into an earlier plan that both depend on, or put one plan in a later wave. Each plan in a wave is built in its own worktree and merged when reviewed, so an overlap that slips through shows up as a merge conflict.
 
 Independence is what makes parallel work safe. If you find yourself unsure whether two plans are independent, they are not: sequence them.
 

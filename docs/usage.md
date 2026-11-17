@@ -109,11 +109,11 @@ Build status.
 
 **Where it waits for you**
 
-1. **Plan approval**, always, after the five planning documents exist and the preflight has checked the environment. The same approval covers any installs the preflight lists.
+1. **Plan approval**, always, after the five planning documents exist and the preflight has checked the environment. The same approval covers the preflight's list of proposed installs, which Claude then installs itself.
 2. **Security review authorization**, after the build.
 3. During the build, only for something that would make the PR/FAQ untrue, a newly discovered choice that would force a rebuild if wrong, or something only you can supply.
 
-**What you get:** in `docs/build/<slug>/`: the spec, `preflight.md`, `architecture.md`, `schema.md`, `api.md`, `phases.md`, `explained-simply.md`, the plan files and their summaries, reviewer reports, `state.md`, `ledger.md`, and the final `report.md`. In git: a `build/<slug>` branch with one commit per reviewed task.
+**What you get:** in `docs/build/<slug>/`: the spec, `preflight.md`, `architecture.md`, `schema.md`, `api.md`, `phases.md`, `explained-simply.md`, the plan files and their summaries, reviewer reports, `state.md`, `ledger.md`, and the final `report.md`. In git: a `build/<slug>` branch with one commit per task and one merge per plan. Each plan is built in a temporary worktree under `.worktrees/` and merged after review.
 
 ## `security-review`
 

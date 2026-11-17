@@ -1,7 +1,7 @@
 {
   "name": "working-backwards",
   "description": "Start from the customer: turn an idea into a PR/FAQ, orchestrate a reviewed, parallel, test-first build until the PR/FAQ is true, then run an authorized security review.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "JBell87"
   },

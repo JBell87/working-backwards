@@ -4,7 +4,7 @@ Append-only. One line per event. Never edit earlier lines.
 
 Format: `<timestamp> | <event> | <plan/task or scope> | <model tier and name> | <result> | <commit or -> | <note>`
 
-Events: `preflight`, `preflight-miss`, `baseline`, `dispatch`, `return`, `review`, `triage`, `fix`, `re-review`, `commit`, `wave-suite`, `phase-review`, `gap-plan`, `escalate`, `decision`, `question`, `final`.
+Events: `preflight`, `preflight-miss`, `baseline`, `dispatch`, `return`, `review`, `triage`, `fix`, `re-review`, `commit`, `merge`, `suite`, `install`, `phase-review`, `gap-plan`, `escalate`, `decision`, `question`, `final`.
 
 ```
 2027-01-12T10:02Z | dispatch    | 01-02 task 1 | standard (sonnet)  | -                    | -       |

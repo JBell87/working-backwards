@@ -10,7 +10,7 @@ connections: [C-01]
 files:                    # allowlist: every file this plan may create or change
   - <path>
   - <test path>
-status: planned           # planned | in-progress | in-review | done | blocked
+status: planned           # planned | in-progress | in-review | merged | blocked
 ---
 
 <!-- Cap: about 2,000 tokens for the whole file. Split the plan if it is larger. Remove these comments. -->

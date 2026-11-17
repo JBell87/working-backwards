@@ -21,7 +21,8 @@ idea
             reference, build phases, plain-language explanation
          └─ preflight: can this environment actually run the plan?
          └─ YOU APPROVE THE BUILD PLAN (and any installs it needs)
-         └─ build: dependency waves in parallel, a fresh agent per task
+         └─ build: dependency waves in parallel, a worktree per plan,
+            a fresh agent per task
              └─ after each task: reviewers with different lenses, in parallel
              └─ after each phase: whole-branch, goal-backward verification
              └─ gaps: gap plans and a fix loop that escalates models
@@ -49,11 +50,11 @@ It does not invent metrics, research, or customers. Gaps are marked as placehold
 
 **Reviews the spec with fresh eyes.** Reviewers with no conversation history check that the spec can be followed, that the design delivers the truths, and that each plan can be implemented as written.
 
-**Checks the environment before asking you.** A preflight derives what the plan needs (runtimes, tools, services, network, credentials), checks each one, and runs a small end-to-end smoke test. Anything missing is listed with its install command; nothing outside the project is installed without your approval.
+**Checks the environment before asking you.** A preflight derives what the plan needs (runtimes, tools, services, network, credentials), checks each one, and runs a small end-to-end smoke test. Anything missing goes on a list of proposed installs; once you approve the list, Claude installs it.
 
 **Asks you once.** You approve the build plan, with five documents to judge it by. After that it comes back to you only if something would make the PR/FAQ untrue, a newly discovered choice would force a rebuild if wrong, or it needs something only you can supply.
 
-**Builds in parallel.** Plans that do not depend on each other and do not share files run at the same time, each task with a fresh agent.
+**Builds in parallel, in isolation.** Plans that do not depend on each other and do not share files run at the same time, each in its own git worktree, each task with a fresh agent. A plan is merged into the build branch only after it passes review, so that branch only ever holds reviewed, passing work.
 
 **Treats "task done" and "goal achieved" as different things.** Reviewers check that tests assert what they should, that code is connected to the rest of the system, and that nothing was stubbed or quietly narrowed. Phase and final reviews verify each promise in four steps: it exists, it is real, it is connected, it is exercised from the outside.
 
@@ -152,7 +153,7 @@ docs/security/<slug>/
 
 ## Status
 
-Version 0.4. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
+Version 0.5. `build-from-prfaq` and `security-review` are new and **have not yet been run end to end**. Draft and critique modes have been exercised on the examples above; coach mode and the six-page narrative have not.
 
 ## Licence and credits
 

@@ -11,7 +11,7 @@ A task can be done and its goal unmet: the function exists but nothing calls it;
 
 Reviewers judge the work against **the assertions the task was supposed to establish and how it fits the rest of the system**, not against whether the code looks reasonable.
 
-Dispatch the reviewers in one message, each fresh, each given the plan file, the task number, the spec path, the implementer's report, and the path to a diff file you wrote (`git diff` of the task's changes, saved under `reviews/`). They do not see each other's reports.
+Dispatch the reviewers in one message, each fresh, each given the plan file, the task number, the spec path, the implementer's report, the plan's worktree path so they can run things, and the path to a diff file you wrote (the task's commits on the plan branch, saved under `reviews/`). Reviewers do not change or commit anything in the worktree. They do not see each other's reports.
 
 | Lens | Asks | Prompt |
 |---|---|---|
@@ -29,7 +29,7 @@ Never review on a lower tier than the one that implemented the task.
 
 ## Level 2: at the end of every phase
 
-After the phase's last wave passes its full-suite run, dispatch one **phase reviewer** (`prompts/review-phase.md`, Reasoning tier), given the spec, the phase's plan files and summaries, and a diff of the whole phase against the commit the phase started from.
+After the phase's last plan is merged and the suite passes on `build/<slug>`, dispatch one **phase reviewer** (`prompts/review-phase.md`, Reasoning tier), given the spec, the phase's plan files and summaries, and a diff of the whole phase against the commit the phase started from.
 
 It performs goal-backward verification for each truth the phase claims to deliver. For each truth, four checks, in order, stopping at the first failure:
 

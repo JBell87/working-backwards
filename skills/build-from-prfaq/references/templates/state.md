@@ -10,13 +10,15 @@ Updated: <timestamp>
 | Pull request | <url or none> |
 | Phase / wave | <phase id> / <n> |
 | Preflight | <ready / ready after installs / open requirements: list>, checked <date> on <machine> |
+| Isolation | worktree per plan, up to <n> at once / shared tree (why) |
 | Review mode | fresh-context / inline (agreed <date>) |
 
 ## Plans
 
-| Plan | Wave | Criticality | Status | Tasks done | Fix rounds | Last commit |
-|---|---|---|---|---|---|---|
-| 01-01 | 1 | normal | done | 3/3 | 1 | `<hash>` |
+| Plan | Wave | Criticality | Status | Tasks done | Fix rounds | Worktree | Merge commit |
+|---|---|---|---|---|---|---|---|
+| 01-01 | 1 | normal | merged | 3/3 | 1 | removed | `<hash>` |
+| 01-02 | 1 | normal | in-progress | 1/2 | 0 | `.worktrees/01-02` | - |
 
 ## Truths
 
